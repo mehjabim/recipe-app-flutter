@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import '../Provider/favorite_provider.dart';
 import '../Utils/constants.dart';
+import '../Views/recipe_detail_screen.dart';
 import '../models/recipe_model.dart';
 
 class FoodItemsDisplay extends StatelessWidget {
@@ -32,7 +33,18 @@ class FoodItemsDisplay extends StatelessWidget {
     final bool isFav = favProvider.isFavorite(itemId);
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap ??
+          () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => RecipeDetailScreen(
+                  documentSnapshot: documentSnapshot,
+                  recipe: recipe,
+                ),
+              ),
+            );
+          },
       child: Container(
         width: 220,
         margin: const EdgeInsets.only(right: 16),

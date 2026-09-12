@@ -274,7 +274,6 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                 itemBuilder: (context, index) {
                   return FoodItemsDisplay(
                     documentSnapshot: docs[index],
-                    onTap: () => _openRecipePlaceholder(docs[index].id, docs[index]['name']),
                   );
                 },
               ),
@@ -306,7 +305,6 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
         itemBuilder: (context, index) {
           return FoodItemsDisplay(
             recipe: recipes[index],
-            onTap: () => _openRecipePlaceholder(recipes[index].id, recipes[index].name),
           );
         },
       ),
@@ -335,17 +333,6 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
             style: TextStyle(fontSize: 13, color: kTextSecondaryColor),
           ),
         ],
-      ),
-    );
-  }
-
-  void _openRecipePlaceholder(String id, String name) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Selected "$name". Detail view coming in Part 5!'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
