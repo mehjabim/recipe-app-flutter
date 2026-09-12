@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../Utils/constants.dart';
+import 'my_app_home_screen.dart';
 import 'profile_screen.dart';
 
 class AppMainScreen extends StatefulWidget {
@@ -13,31 +14,33 @@ class AppMainScreen extends StatefulWidget {
 class _AppMainScreenState extends State<AppMainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const _PlaceholderView(
-      title: 'Explore Recipes',
-      subtitle: 'Part 3 & 4 will bring your rich recipe catalog here.',
-      icon: Iconsax.discover,
-    ),
-    const _PlaceholderView(
-      title: 'Meal Planner',
-      subtitle: 'Plan your weekly mindful dishes.',
-      icon: Iconsax.calendar_1,
-    ),
-    const _PlaceholderView(
-      title: 'Saved Favorites',
-      subtitle: 'Your personal bookmarked recipes will appear here.',
-      icon: Iconsax.heart,
-    ),
-    const ProfileScreen(),
-  ];
+  void _navigateToTab(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      MyAppHomeScreen(onNavigateTab: _navigateToTab),
+      const _PlaceholderView(
+        title: 'Meal Planner',
+        subtitle: 'Plan your weekly mindful dishes. Scheduled for Part 6.',
+        icon: Iconsax.calendar_1,
+      ),
+      const _PlaceholderView(
+        title: 'Saved Favorites',
+        subtitle: 'Your personal bookmarked recipes will appear here. Scheduled for Part 6.',
+        icon: Iconsax.heart,
+      ),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
-        children: _pages,
+        children: pages,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
