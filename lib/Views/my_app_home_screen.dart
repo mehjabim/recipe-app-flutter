@@ -9,6 +9,7 @@ import '../Widget/banner.dart';
 import '../Widget/food_items_display.dart';
 import '../Widget/my_icon_button.dart';
 import '../services/mock_data_service.dart';
+import 'notifications_screen.dart';
 import 'view_all_items.dart';
 
 class MyAppHomeScreen extends StatefulWidget {
@@ -73,11 +74,10 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                   MyIconButton(
                     icon: const Icon(Iconsax.notification, color: kTextPrimaryColor, size: 20),
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('No new notifications right now.'),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const NotificationsScreen(),
                         ),
                       );
                     },

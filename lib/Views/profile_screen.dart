@@ -1,18 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Provider/auth_provider.dart';
 import '../Utils/constants.dart';
+import 'notifications_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool _cookingReminders = true;
+  bool _vegetarianOption = true;
+  bool _glutenFreeOption = false;
+  bool _highProteinOption = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _cookingReminders = prefs.getBool('pref_cooking_reminders') ?? true;
+        _vegetarianOption = prefs.getBool('pref_vegetarian') ?? true;
+        _glutenFreeOption = prefs.getBool('pref_gluten_free') ?? false;
+        _highProteinOption = prefs.getBool('pref_high_protein') ?? true;
+      });
+    }
+  }
+
+  Future<void> _updatePref(String key, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(key, value);
+  }
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AppAuthProvider>(context);
     final user = auth.currentUser;
-    final displayName = user?.displayName ?? 'Mindful Chef';
-    final email = user?.email ?? (user?.isGuest == true ? 'Guest Session' : 'chef@mindfulrecipes.com');
+    final displayName = user?.displayName ?? 'Chef Mehjabin';
+    final email = user?.email ?? (user?.isGuest == true ? 'Guest Session' : 'mehjabin@mindfulrecipes.com');
 
     return Scaffold(
       backgroundColor: kbackgroundColor,
@@ -86,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
                               'Guest Mode',
                               style: TextStyle(
                                 fontSize: 11,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
                                 color: kBannerColor,
                               ),
                             ),
@@ -104,7 +139,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Settings Group
+            // Preferences Group
             _buildSectionHeader('Preferences'),
             const SizedBox(height: 10),
             _buildSettingCard(
@@ -112,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
                 _buildSettingTile(
                   icon: Iconsax.heart,
                   title: 'Dietary Preferences',
-                  subtitle: 'Vegetarian, Vegan, Gluten-Free',
+                  subtitle: 'Vegetarian, Gluten-Free, High Protein',
                   onTap: () => _showDietaryDialog(context),
                 ),
                 const Divider(height: 1, color: kBorderColor),
@@ -121,17 +156,32 @@ class ProfileScreen extends StatelessWidget {
                   title: 'Cooking Reminders',
                   subtitle: 'Daily meal prep alerts',
                   trailing: Switch(
-                    value: true,
+                    value: _cookingReminders,
                     activeThumbColor: kprimaryColor,
                     activeTrackColor: kprimaryColor.withValues(alpha: 0.3),
-                    onChanged: (val) {},
+                    onChanged: (val) {
+                      setState(() => _cookingReminders = val);
+                      _updatePref('pref_cooking_reminders', val);
+                    },
                   ),
+                ),
+                const Divider(height: 1, color: kBorderColor),
+                _buildSettingTile(
+                  icon: Iconsax.notification_bing,
+                  title: 'View Notifications Inbox',
+                  subtitle: 'Daily habit & prep reminders',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+                    );
+                  },
                 ),
               ],
             ),
             const SizedBox(height: 24),
 
-            _buildSectionHeader('Account'),
+            _buildSectionHeader('Account & Info'),
             const SizedBox(height: 10),
             _buildSettingCard(
               children: [
@@ -176,6 +226,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -277,38 +328,55 @@ class ProfileScreen extends StatelessWidget {
   void _showDietaryDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Dietary Preferences'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CheckboxListTile(
-              value: true,
-              activeColor: kprimaryColor,
-              title: const Text('Vegetarian Options'),
-              onChanged: (val) {},
-            ),
-            CheckboxListTile(
-              value: false,
-              activeColor: kprimaryColor,
-              title: const Text('Gluten-Free Only'),
-              onChanged: (val) {},
-            ),
-            CheckboxListTile(
-              value: true,
-              activeColor: kprimaryColor,
-              title: const Text('High Protein Focus'),
-              onChanged: (val) {},
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text('Dietary Preferences'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CheckboxListTile(
+                value: _vegetarianOption,
+                activeColor: kprimaryColor,
+                title: const Text('Vegetarian Options'),
+                onChanged: (val) {
+                  final v = val ?? true;
+                  setState(() => _vegetarianOption = v);
+                  setModalState(() => _vegetarianOption = v);
+                  _updatePref('pref_vegetarian', v);
+                },
+              ),
+              CheckboxListTile(
+                value: _glutenFreeOption,
+                activeColor: kprimaryColor,
+                title: const Text('Gluten-Free Only'),
+                onChanged: (val) {
+                  final v = val ?? false;
+                  setState(() => _glutenFreeOption = v);
+                  setModalState(() => _glutenFreeOption = v);
+                  _updatePref('pref_gluten_free', v);
+                },
+              ),
+              CheckboxListTile(
+                value: _highProteinOption,
+                activeColor: kprimaryColor,
+                title: const Text('High Protein Focus'),
+                onChanged: (val) {
+                  final v = val ?? true;
+                  setState(() => _highProteinOption = v);
+                  setModalState(() => _highProteinOption = v);
+                  _updatePref('pref_high_protein', v);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Done'),
             ),
           ],
         ),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Done'),
-          ),
-        ],
       ),
     );
   }
@@ -320,7 +388,7 @@ class ProfileScreen extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Mindful Recipes'),
         content: const Text(
-          'Crafted with serene designs and healthy culinary recipes to bring peace and joy to your kitchen.\n\nAuthor: Mehjabin',
+          'Crafted with serene designs and healthy culinary recipes to bring peace and joy to your kitchen.\n\nAuthor: Mehjabin\nVersion: 1.0.0',
         ),
         actions: [
           ElevatedButton(
