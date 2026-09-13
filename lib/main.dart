@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Provider/auth_provider.dart';
@@ -6,10 +7,19 @@ import 'Provider/meal_plan_provider.dart';
 import 'Provider/quantity.dart';
 import 'Utils/theme.dart';
 import 'Views/auth_gate.dart';
+import 'firebase_options.dart';
 import 'services/mock_data_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint("Firebase initialization note: $e");
+  }
 
   // Optimized image cache configuration
   PaintingBinding.instance.imageCache.maximumSize = 300;
