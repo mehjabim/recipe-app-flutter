@@ -9,6 +9,7 @@ import '../Widget/banner.dart';
 import '../Widget/food_items_display.dart';
 import '../Widget/my_icon_button.dart';
 import '../services/mock_data_service.dart';
+import 'view_all_items.dart';
 
 class MyAppHomeScreen extends StatefulWidget {
   final Function(int)? onNavigateTab;
@@ -216,9 +217,14 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      if (widget.onNavigateTab != null) {
-                        widget.onNavigateTab!(2); // Go to Favorites
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ViewAllItems(
+                            initialCategory: _selectedCategory,
+                          ),
+                        ),
+                      );
                     },
                     child: const Text(
                       'View All',

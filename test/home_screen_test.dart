@@ -32,7 +32,7 @@ void main() {
     // Verify categories rendered
     expect(find.text('Categories'), findsOneWidget);
     expect(find.text('All'), findsOneWidget);
-    expect(find.text('Breakfast'), findsOneWidget);
+    expect(find.text('Energizing Breakfast'), findsOneWidget);
 
     // Verify banner rendered
     expect(find.text('Cook with Calm & Joy'), findsOneWidget);

@@ -38,7 +38,7 @@ void main() {
       expect(recipes.isNotEmpty, true);
       expect(MockDataService.defaultCategories.length, greaterThan(3));
 
-      final breakfastRecipes = MockDataService.getRecipesByCategory('Breakfast');
+      final breakfastRecipes = MockDataService.getRecipesByCategory('Energizing Breakfast');
       expect(breakfastRecipes.isNotEmpty, true);
     });
 

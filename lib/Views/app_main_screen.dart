@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../Utils/constants.dart';
+import 'favorite_screen.dart';
+import 'meal_plan_screen.dart';
 import 'my_app_home_screen.dart';
 import 'profile_screen.dart';
 
@@ -24,16 +26,8 @@ class _AppMainScreenState extends State<AppMainScreen> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       MyAppHomeScreen(onNavigateTab: _navigateToTab),
-      const _PlaceholderView(
-        title: 'Meal Planner',
-        subtitle: 'Plan your weekly mindful dishes. Scheduled for Part 6.',
-        icon: Iconsax.calendar_1,
-      ),
-      const _PlaceholderView(
-        title: 'Saved Favorites',
-        subtitle: 'Your personal bookmarked recipes will appear here. Scheduled for Part 6.',
-        icon: Iconsax.heart,
-      ),
+      const MealPlanScreen(),
+      const FavoriteScreen(),
       const ProfileScreen(),
     ];
 
@@ -86,64 +80,6 @@ class _AppMainScreenState extends State<AppMainScreen> {
                 icon: Icon(Iconsax.user, color: kTextSecondaryColor),
                 selectedIcon: Icon(Iconsax.profile_circle5, color: kprimaryColor),
                 label: 'Profile',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PlaceholderView extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  const _PlaceholderView({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kbackgroundColor,
-      appBar: AppBar(title: Text(title)),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 90,
-                height: 90,
-                decoration: BoxDecoration(
-                  color: kprimaryColor.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, size: 44, color: kprimaryColor),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: kTextPrimaryColor,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                subtitle,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: kTextSecondaryColor,
-                  height: 1.4,
-                ),
               ),
             ],
           ),

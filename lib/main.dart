@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Provider/auth_provider.dart';
 import 'Provider/favorite_provider.dart';
+import 'Provider/meal_plan_provider.dart';
 import 'Provider/quantity.dart';
 import 'Utils/theme.dart';
 import 'Views/auth_gate.dart';
@@ -33,6 +34,7 @@ class RecipeApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AppAuthProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => QuantityProvider()),
+        ChangeNotifierProvider(create: (_) => MealPlanProvider()),
       ],
       child: MaterialApp(
         title: 'Recipe App',
