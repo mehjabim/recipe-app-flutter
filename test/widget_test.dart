@@ -14,6 +14,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
 
     expect(find.text('Welcome Back'), findsOneWidget);
+    expect(find.text('Continue with Google'), findsOneWidget);
     expect(find.text('Continue as Guest'), findsOneWidget);
     expect(find.text('Sign In'), findsOneWidget);
   });

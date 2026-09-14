@@ -12,12 +12,14 @@ class FoodItemsDisplay extends StatelessWidget {
   final DocumentSnapshot<Object?>? documentSnapshot;
   final RecipeModel? recipe;
   final VoidCallback? onTap;
+  final bool isGrid;
 
   const FoodItemsDisplay({
     super.key,
     this.documentSnapshot,
     this.recipe,
     this.onTap,
+    this.isGrid = false,
   }) : assert(documentSnapshot != null || recipe != null);
 
   @override
@@ -42,6 +44,8 @@ class FoodItemsDisplay extends StatelessWidget {
     final String rate = recipe?.rate ?? (data['rate']?.toString() ?? "4.9");
     final bool isFav = favProvider.isFavorite(itemId);
 
+    final double imageHeight = isGrid ? 112.0 : 145.0;
+
     return GestureDetector(
       onTap: onTap ??
           () {
@@ -56,8 +60,8 @@ class FoodItemsDisplay extends StatelessWidget {
             );
           },
       child: Container(
-        width: 220,
-        margin: const EdgeInsets.only(right: 16),
+        width: isGrid ? double.infinity : 220,
+        margin: isGrid ? EdgeInsets.zero : const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(22),
@@ -83,16 +87,16 @@ class FoodItemsDisplay extends StatelessWidget {
                         ? Image.network(
                             image,
                             width: double.infinity,
-                            height: 145,
+                            height: imageHeight,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) => Container(
-                              height: 145,
+                              height: imageHeight,
                               color: kCardBgColor,
                               child: const Icon(Iconsax.image, color: kTextSecondaryColor, size: 36),
                             ),
                           )
                         : Container(
-                            height: 145,
+                            height: imageHeight,
                             color: kCardBgColor,
                             child: const Icon(Iconsax.image, color: kTextSecondaryColor, size: 36),
                           ),
@@ -159,7 +163,7 @@ class FoodItemsDisplay extends StatelessWidget {
 
             // Card Details
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(isGrid ? 10.0 : 12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -167,62 +171,70 @@ class FoodItemsDisplay extends StatelessWidget {
                     name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 15,
+                    style: TextStyle(
+                      fontSize: isGrid ? 13.5 : 15,
                       fontWeight: FontWeight.bold,
                       color: kTextPrimaryColor,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 4,
-                    crossAxisAlignment: WrapCrossAlignment.center,
+                  Row(
                     children: [
                       // Calorie pill
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: kBannerColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Iconsax.flash_1, size: 12, color: kBannerColor),
-                            const SizedBox(width: 3),
-                            Text(
-                              '$cal cal',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: kBannerColor,
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: kBannerColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Iconsax.flash_1, size: 11, color: kBannerColor),
+                              const SizedBox(width: 2),
+                              Flexible(
+                                child: Text(
+                                  '$cal cal',
+                                  style: const TextStyle(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.bold,
+                                    color: kBannerColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
+                      const SizedBox(width: 6),
                       // Time pill
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: kprimaryColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Iconsax.clock, size: 12, color: kprimaryColor),
-                            const SizedBox(width: 3),
-                            Text(
-                              '$time min',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: kprimaryColor,
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: kprimaryColor.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Iconsax.clock, size: 11, color: kprimaryColor),
+                              const SizedBox(width: 2),
+                              Flexible(
+                                child: Text(
+                                  '$time min',
+                                  style: const TextStyle(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.bold,
+                                    color: kprimaryColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],

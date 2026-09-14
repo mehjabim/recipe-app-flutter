@@ -58,6 +58,47 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> _handleGoogleSignIn() async {
+    final auth = Provider.of<AppAuthProvider>(context, listen: false);
+    final success = await auth.signInWithGoogle();
+    if (!success && mounted && auth.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(auth.errorMessage!),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
+  }
+
+  Widget _buildGoogleLogo() {
+    return Container(
+      width: 26,
+      height: 26,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: const Text(
+        'G',
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w900,
+          color: Color(0xFF4285F4),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AppAuthProvider>(context);
@@ -218,6 +259,60 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 const SizedBox(height: 20),
+
+                // OR Divider
+                Row(
+                  children: [
+                    const Expanded(child: Divider(color: kBorderColor, thickness: 1)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                      child: Text(
+                        'OR',
+                        style: TextStyle(
+                          color: kTextSecondaryColor.withValues(alpha: 0.8),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const Expanded(child: Divider(color: kBorderColor, thickness: 1)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Google Sign In Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: auth.isLoading ? null : _handleGoogleSignIn,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: kTextPrimaryColor,
+                      elevation: 0,
+                      side: const BorderSide(color: kBorderColor, width: 1.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildGoogleLogo(),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Continue with Google',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: kTextPrimaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
 
                 // Guest Mode Button
                 SizedBox(

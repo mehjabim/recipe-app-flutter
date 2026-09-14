@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/recipe_model.dart';
 
@@ -244,6 +245,150 @@ class MockDataService {
         "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=120&q=60",
       ],
     },
+    {
+      "name": "Zucchini Ribbon & Pistachio Pesto",
+      "image": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80",
+      "cal": "230",
+      "time": "15",
+      "rate": "4.9",
+      "reviews": "92",
+      "category": "Mindful Bowls",
+      "description": "Tender spiralized zucchini ribbons tossed in homemade roasted pistachio and basil pesto with blistered cherry tomatoes and toasted pine nuts.",
+      "ingredientsAmount": [200.0, 45.0, 80.0, 20.0],
+      "ingredientsName": ["Zucchini Ribbons", "Pistachio Basil Pesto", "Cherry Tomatoes", "Toasted Pine Nuts"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
+    {
+      "name": "Pan-Seared Citrus Herb Salmon",
+      "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=600&q=80",
+      "cal": "380",
+      "time": "18",
+      "rate": "4.9",
+      "reviews": "156",
+      "category": "Mindful Bowls",
+      "description": "Wild-caught crispy skin salmon fillet glazed in fresh Meyer lemon juice, dill sprigs, and served over steamed cauliflower rice.",
+      "ingredientsAmount": [180.0, 150.0, 30.0, 20.0],
+      "ingredientsName": ["Wild Salmon Fillet", "Cauliflower Rice", "Meyer Lemon & Dill", "Olive Oil"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1472476443507-c7a5948772fc?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
+    {
+      "name": "Overnight Lavender Vanilla Oats",
+      "image": "https://images.unsplash.com/photo-1517673400267-0251440c45dc?auto=format&fit=crop&w=600&q=80",
+      "cal": "275",
+      "time": "8",
+      "rate": "4.8",
+      "reviews": "74",
+      "category": "Energizing Breakfast",
+      "description": "Jumbo rolled oats slowly cold-soaked in almond milk infused with culinary lavender, vanilla bean, chia seeds, and ripe blackberries.",
+      "ingredientsAmount": [80.0, 180.0, 20.0, 40.0],
+      "ingredientsName": ["Rolled Oats", "Almond Milk", "Lavender & Vanilla", "Blackberries"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
+    {
+      "name": "Rainbow Beet & Goat Cheese Salad",
+      "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
+      "cal": "180",
+      "time": "15",
+      "rate": "4.9",
+      "reviews": "88",
+      "category": "Fresh Greens",
+      "description": "Thinly shaved roasted golden beets with crumbled French chèvre goat cheese, fresh pea tendrils, and an orange-balsamic reduction.",
+      "ingredientsAmount": [140.0, 40.0, 30.0, 25.0],
+      "ingredientsName": ["Golden Beets", "French Chèvre", "Pea Tendrils", "Orange Balsamic"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
+    {
+      "name": "Moroccan Chickpea & Apricot Stew",
+      "image": "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80",
+      "cal": "340",
+      "time": "30",
+      "rate": "4.9",
+      "reviews": "112",
+      "category": "Warm Comfort",
+      "description": "Slow-simmered organic chickpeas in a fragrant broth of cinnamon, saffron, and cumin, enriched with dried apricots and toasted almonds.",
+      "ingredientsAmount": [180.0, 40.0, 250.0, 25.0],
+      "ingredientsName": ["Cooked Chickpeas", "Dried Apricots", "Saffron Broth", "Toasted Almonds"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
+    {
+      "name": "Cardamom Coconut Cream Tartlet",
+      "image": "https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=600&q=80",
+      "cal": "220",
+      "time": "25",
+      "rate": "4.8",
+      "reviews": "59",
+      "category": "Sweet Treats",
+      "description": "Crisp gluten-free almond crust filled with silken whipped coconut cream infused with freshly crushed green cardamom and edible blossoms.",
+      "ingredientsAmount": [90.0, 120.0, 10.0, 20.0],
+      "ingredientsName": ["Almond Oat Crust", "Whipped Coconut Cream", "Crushed Cardamom", "Edible Blossoms"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
+    {
+      "name": "Warm Spiced Cinnamon Apple Compote",
+      "image": "https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?auto=format&fit=crop&w=600&q=80",
+      "cal": "190",
+      "time": "15",
+      "rate": "4.8",
+      "reviews": "67",
+      "category": "Warm Comfort",
+      "description": "Honeycrisp apples braised with Ceylon cinnamon, star anise, and fresh orange zest, served warm with toasted crushed walnuts.",
+      "ingredientsAmount": [200.0, 10.0, 15.0, 30.0],
+      "ingredientsName": ["Honeycrisp Apples", "Ceylon Cinnamon", "Pure Maple", "Crushed Walnuts"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1508746829417-e6f548d8d6ed?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
+    {
+      "name": "Smoked Paprika Roasted Edamame",
+      "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+      "cal": "160",
+      "time": "12",
+      "rate": "4.7",
+      "reviews": "43",
+      "category": "Quick Snacks",
+      "description": "Plump young edamame pods tossed in Spanish smoked pimentón, cold-pressed olive oil, and coarse flaky Maldon salt.",
+      "ingredientsAmount": [180.0, 10.0, 15.0, 5.0],
+      "ingredientsName": ["Whole Edamame", "Smoked Paprika", "Extra Virgin Olive Oil", "Maldon Sea Salt"],
+      "ingredientsImage": [
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1472476443507-c7a5948772fc?auto=format&fit=crop&w=120&q=60",
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=120&q=60",
+      ],
+    },
   ];
 
   static List<RecipeModel> _cachedRecipes = [];
@@ -288,39 +433,69 @@ class MockDataService {
 
   static Future<void> seedFirestoreIfEmpty() async {
     try {
-      if (Firebase.apps.isEmpty) return;
+      if (Firebase.apps.isNotEmpty) {
+        final recipesRef = FirebaseFirestore.instance.collection('recipes');
+        final categoriesRef = FirebaseFirestore.instance.collection('categories');
 
-      final recipesRef = FirebaseFirestore.instance.collection('recipes');
-      final categoriesRef = FirebaseFirestore.instance.collection('categories');
-
-      final recipesSnapshot = await recipesRef.limit(1).get();
-      if (recipesSnapshot.docs.isEmpty) {
-        debugPrint("Seeding mindful recipes to Firestore in background...");
-        final batch = FirebaseFirestore.instance.batch();
-        for (var i = 0; i < defaultRecipes.length; i++) {
-          final id = "mindful_recipe_${i + 1}";
-          final doc = recipesRef.doc(id);
-          final payload = Map<String, dynamic>.from(defaultRecipes[i]);
-          payload['id'] = id;
-          batch.set(doc, payload);
+        final recipesSnapshot = await recipesRef.get();
+        // If empty or fewer recipes than current catalog, seed/update them
+        if (recipesSnapshot.docs.length < defaultRecipes.length) {
+          debugPrint("Seeding mindful recipes to Firestore in background...");
+          final batch = FirebaseFirestore.instance.batch();
+          for (var i = 0; i < defaultRecipes.length; i++) {
+            final id = "mindful_recipe_${i + 1}";
+            final doc = recipesRef.doc(id);
+            final payload = Map<String, dynamic>.from(defaultRecipes[i]);
+            payload['id'] = id;
+            batch.set(doc, payload, SetOptions(merge: true));
+          }
+          await batch.commit();
+          debugPrint("Mindful recipes seeded successfully to Firestore!");
         }
-        await batch.commit();
-        debugPrint("Mindful recipes seeded successfully!");
+
+        final categoriesSnapshot = await categoriesRef.limit(1).get();
+        if (categoriesSnapshot.docs.isEmpty) {
+          debugPrint("Seeding categories to Firestore in background...");
+          final batch = FirebaseFirestore.instance.batch();
+          for (var cat in defaultCategories) {
+            final doc = categoriesRef.doc();
+            batch.set(doc, cat);
+          }
+          await batch.commit();
+          debugPrint("Categories seeded successfully!");
+        }
       }
 
-      final categoriesSnapshot = await categoriesRef.limit(1).get();
-      if (categoriesSnapshot.docs.isEmpty) {
-        debugPrint("Seeding categories to Firestore in background...");
-        final batch = FirebaseFirestore.instance.batch();
-        for (var cat in defaultCategories) {
-          final doc = categoriesRef.doc();
-          batch.set(doc, cat);
-        }
-        await batch.commit();
-        debugPrint("Categories seeded successfully!");
-      }
+      // Sync catalog to Firebase Realtime Database
+      await syncToRealtimeDatabase();
     } catch (e) {
       debugPrint("Firestore seeding note: $e");
+    }
+  }
+
+  static Future<void> syncToRealtimeDatabase() async {
+    try {
+      final url = Uri.parse(
+          "https://flutter-recipe-f86a9-default-rtdb.firebaseio.com/recipes.json");
+      final Map<String, dynamic> rtdbPayload = {};
+      for (var i = 0; i < defaultRecipes.length; i++) {
+        final id = "mindful_recipe_${i + 1}";
+        final map = Map<String, dynamic>.from(defaultRecipes[i]);
+        map['id'] = id;
+        rtdbPayload[id] = map;
+      }
+
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(rtdbPayload),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("Synced 20 recipes to Firebase Realtime Database successfully!");
+      }
+    } catch (e) {
+      debugPrint("Realtime Database sync note: $e");
     }
   }
 }

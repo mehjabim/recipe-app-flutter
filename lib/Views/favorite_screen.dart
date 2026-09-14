@@ -94,7 +94,7 @@ class FavoriteScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 0.70,
+                childAspectRatio: 0.72,
                 crossAxisSpacing: 14,
                 mainAxisSpacing: 14,
               ),
@@ -126,7 +126,10 @@ class FavoriteScreen extends StatelessWidget {
 
                     final recipe = snapshot.data;
                     if (recipe != null) {
-                      return FoodItemsDisplay(recipe: recipe);
+                      return FoodItemsDisplay(
+                        recipe: recipe,
+                        isGrid: true,
+                      );
                     }
 
                     // Fallback for orphaned id

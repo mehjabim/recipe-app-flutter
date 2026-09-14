@@ -179,6 +179,7 @@ class _ViewAllItemsState extends State<ViewAllItems> {
                     itemBuilder: (context, index) {
                       return FoodItemsDisplay(
                         recipe: recipes[index],
+                        isGrid: true,
                       );
                     },
                   ),
