@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:recipe_app3/Provider/auth_provider.dart';
 import 'package:recipe_app3/Provider/favorite_provider.dart';
 import 'package:recipe_app3/Provider/meal_plan_provider.dart';
+import 'package:recipe_app3/Provider/quantity.dart';
 import 'package:recipe_app3/Views/favorite_screen.dart';
 import 'package:recipe_app3/Views/meal_plan_screen.dart';
 import 'package:recipe_app3/services/mock_data_service.dart';
@@ -100,6 +101,47 @@ void main() {
 
     final thuMeals = provider.getMealsForDay('Thu');
     expect(thuMeals.any((m) => m.id == 'test_meal_1'), isFalse);
+  });
+
+  testWidgets('MealPlanScreen meal tile opens RecipeDetailScreen on tap', (WidgetTester tester) async {
+    final mealProvider = MealPlanProvider();
+    mealProvider.addMeal(
+      PlannedMeal(
+        id: 'detail_test_meal',
+        day: 'Mon',
+        mealType: 'Breakfast',
+        recipeName: 'Zucchini Ribbon & Pistachio Pesto',
+        time: '08:00 AM',
+        calories: '230 Cal',
+        imageUrl: '',
+      ),
+    );
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider<MealPlanProvider>.value(value: mealProvider),
+          ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+          ChangeNotifierProvider(create: (_) => QuantityProvider()),
+        ],
+        child: const MaterialApp(
+          home: MealPlanScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('Zucchini Ribbon & Pistachio Pesto'), findsOneWidget);
+
+    // Tap on the meal title
+    await tester.tap(find.text('Zucchini Ribbon & Pistachio Pesto'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+
+    // Verifies navigation to RecipeDetailScreen and CTA visibility
+    expect(find.text('Add to Meal Planner'), findsOneWidget);
   });
 }
 

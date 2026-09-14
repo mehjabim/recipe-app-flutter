@@ -124,9 +124,21 @@ class MealPlanProvider extends ChangeNotifier {
       final saved = prefs.getString(_getStorageKey());
       if (saved != null && saved.isNotEmpty) {
         final List<dynamic> decoded = jsonDecode(saved);
-        _meals = decoded.map((m) => PlannedMeal.fromJson(m)).toList();
+        final loaded = decoded.map((m) => PlannedMeal.fromJson(m)).toList();
+        for (final m in _meals) {
+          if (!loaded.any((l) => l.id == m.id)) {
+            loaded.add(m);
+          }
+        }
+        _meals = loaded;
       } else {
-        _meals = _getInitialDefaultPlan();
+        final defaults = _getInitialDefaultPlan();
+        for (final m in _meals) {
+          if (!defaults.any((l) => l.id == m.id)) {
+            defaults.add(m);
+          }
+        }
+        _meals = defaults;
         await _saveToPrefs();
       }
       notifyListeners();

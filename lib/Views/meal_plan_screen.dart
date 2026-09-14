@@ -5,6 +5,7 @@ import '../Provider/meal_plan_provider.dart';
 import '../Utils/constants.dart';
 import '../models/recipe_model.dart';
 import '../services/mock_data_service.dart';
+import 'recipe_detail_screen.dart';
 
 class MealPlanScreen extends StatefulWidget {
   const MealPlanScreen({super.key});
@@ -146,6 +147,47 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
     );
   }
 
+  void _openRecipeDetail(BuildContext context, PlannedMeal meal) {
+    RecipeModel? targetRecipe;
+    final all = MockDataService.getAllRecipes();
+    for (final r in all) {
+      if (r.name.trim().toLowerCase() == meal.recipeName.trim().toLowerCase() ||
+          r.id == meal.id) {
+        targetRecipe = r;
+        break;
+      }
+    }
+
+    targetRecipe ??= RecipeModel(
+      id: meal.id,
+      name: meal.recipeName,
+      image: meal.imageUrl,
+      cal: meal.calories.replaceAll(RegExp(r'[^0-9]'), ''),
+      time: meal.time.replaceAll(RegExp(r'[^0-9]'), ''),
+      rate: '4.9',
+      reviews: '52',
+      category: meal.mealType,
+      description:
+          'A thoughtfully prepared mindful dish packed with wholesome ingredients, scheduled for your ${meal.day} meal plan.',
+      ingredientsAmount: [150.0, 80.0, 30.0],
+      ingredientsName: [
+        'Organic Primary Ingredient',
+        'Seasonal Vegetables & Greens',
+        'Cold-Pressed Dressing'
+      ],
+      ingredientsImage: [],
+    );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => RecipeDetailScreen(
+          recipe: targetRecipe,
+        ),
+      ),
+    );
+  }
+
   Widget _buildMealCard(BuildContext context, MealPlanProvider provider, PlannedMeal meal) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -161,58 +203,92 @@ class _MealPlanScreenState extends State<MealPlanScreen> {
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: GestureDetector(
-          onTap: () => provider.toggleMealCompletion(meal.id),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: meal.isCompleted ? kprimaryColor : Colors.transparent,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: meal.isCompleted ? kprimaryColor : kBorderColor,
-                width: 2,
+        onTap: () => _openRecipeDetail(context, meal),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GestureDetector(
+              onTap: () => provider.toggleMealCompletion(meal.id),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  color: meal.isCompleted ? kprimaryColor : Colors.transparent,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: meal.isCompleted ? kprimaryColor : kBorderColor,
+                    width: 2,
+                  ),
+                ),
+                child: meal.isCompleted
+                    ? const Icon(Icons.check, size: 15, color: Colors.white)
+                    : null,
               ),
             ),
-            child: meal.isCompleted
-                ? const Icon(Icons.check, size: 18, color: Colors.white)
-                : null,
-          ),
+            const SizedBox(width: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: meal.imageUrl.isNotEmpty
+                  ? Image.network(
+                      meal.imageUrl,
+                      width: 44,
+                      height: 44,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Container(
+                        width: 44,
+                        height: 44,
+                        color: kCardBgColor,
+                        child: const Icon(Iconsax.image, size: 18, color: kTextSecondaryColor),
+                      ),
+                    )
+                  : Container(
+                      width: 44,
+                      height: 44,
+                      color: kCardBgColor,
+                      child: const Icon(Iconsax.image, size: 18, color: kTextSecondaryColor),
+                    ),
+            ),
+          ],
         ),
         title: Text(
           meal.recipeName,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 14.5,
             fontWeight: FontWeight.bold,
             color: meal.isCompleted ? kTextSecondaryColor : kTextPrimaryColor,
             decoration: meal.isCompleted ? TextDecoration.lineThrough : null,
           ),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 6.0),
+          padding: const EdgeInsets.only(top: 4.0),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                 decoration: BoxDecoration(
                   color: kprimaryColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   meal.mealType,
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 10.5,
                     fontWeight: FontWeight.bold,
                     color: kprimaryColor,
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(
-                '${meal.time} • ${meal.calories}',
-                style: const TextStyle(fontSize: 12, color: kTextSecondaryColor),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  '${meal.time} • ${meal.calories}',
+                  style: const TextStyle(fontSize: 11.5, color: kTextSecondaryColor),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
