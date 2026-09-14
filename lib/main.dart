@@ -42,9 +42,23 @@ class RecipeApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppAuthProvider()),
-        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+        ChangeNotifierProxyProvider<AppAuthProvider, FavoriteProvider>(
+          create: (_) => FavoriteProvider(),
+          update: (_, auth, fav) {
+            final provider = fav ?? FavoriteProvider();
+            provider.checkUserChanged(auth.currentUser?.uid);
+            return provider;
+          },
+        ),
         ChangeNotifierProvider(create: (_) => QuantityProvider()),
-        ChangeNotifierProvider(create: (_) => MealPlanProvider()),
+        ChangeNotifierProxyProvider<AppAuthProvider, MealPlanProvider>(
+          create: (_) => MealPlanProvider(),
+          update: (_, auth, plan) {
+            final provider = plan ?? MealPlanProvider();
+            provider.checkUserChanged(auth.currentUser?.uid);
+            return provider;
+          },
+        ),
       ],
       child: MaterialApp(
         title: 'Recipe App',

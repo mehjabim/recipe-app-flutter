@@ -297,9 +297,12 @@ class MockDataService {
       if (recipesSnapshot.docs.isEmpty) {
         debugPrint("Seeding mindful recipes to Firestore in background...");
         final batch = FirebaseFirestore.instance.batch();
-        for (var recipe in defaultRecipes) {
-          final doc = recipesRef.doc();
-          batch.set(doc, recipe);
+        for (var i = 0; i < defaultRecipes.length; i++) {
+          final id = "mindful_recipe_${i + 1}";
+          final doc = recipesRef.doc(id);
+          final payload = Map<String, dynamic>.from(defaultRecipes[i]);
+          payload['id'] = id;
+          batch.set(doc, payload);
         }
         await batch.commit();
         debugPrint("Mindful recipes seeded successfully!");

@@ -24,25 +24,28 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyDDG-L2lQwZRlKPMpZ4AyQA_HNvO5orOlw',
     appId: '1:782727628864:web:f1c0156ffbc93f59bb37a5',
     messagingSenderId: '782727628864',
-    projectId: 'recipe-app-flutter3',
-    authDomain: 'recipe-app-flutter3.firebaseapp.com',
-    storageBucket: 'recipe-app-flutter3.firebasestorage.app',
+    projectId: 'flutter-recipe-f86a9',
+    authDomain: 'flutter-recipe-f86a9.firebaseapp.com',
+    databaseURL: 'https://flutter-recipe-f86a9-default-rtdb.firebaseio.com',
+    storageBucket: 'flutter-recipe-f86a9.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB8Vi_ES5K5bg-M9RAOzgRCVkn_rGTotMY',
     appId: '1:782727628864:android:a98867c1caa0360dbb37a5',
     messagingSenderId: '782727628864',
-    projectId: 'recipe-app-flutter3',
-    storageBucket: 'recipe-app-flutter3.firebasestorage.app',
+    projectId: 'flutter-recipe-f86a9',
+    databaseURL: 'https://flutter-recipe-f86a9-default-rtdb.firebaseio.com',
+    storageBucket: 'flutter-recipe-f86a9.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDxpR6TY9qeY-JGZfIlCUE2EaB8M_HkE4s',
     appId: '1:782727628864:ios:933690d23a2c5400bb37a5',
     messagingSenderId: '782727628864',
-    projectId: 'recipe-app-flutter3',
-    storageBucket: 'recipe-app-flutter3.firebasestorage.app',
+    projectId: 'flutter-recipe-f86a9',
+    databaseURL: 'https://flutter-recipe-f86a9-default-rtdb.firebaseio.com',
+    storageBucket: 'flutter-recipe-f86a9.appspot.com',
     iosBundleId: 'com.example.recipe_app3',
   );
 
@@ -50,8 +53,9 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyDxpR6TY9qeY-JGZfIlCUE2EaB8M_HkE4s',
     appId: '1:782727628864:ios:933690d23a2c5400bb37a5',
     messagingSenderId: '782727628864',
-    projectId: 'recipe-app-flutter3',
-    storageBucket: 'recipe-app-flutter3.firebasestorage.app',
+    projectId: 'flutter-recipe-f86a9',
+    databaseURL: 'https://flutter-recipe-f86a9-default-rtdb.firebaseio.com',
+    storageBucket: 'flutter-recipe-f86a9.appspot.com',
     iosBundleId: 'com.example.recipe_app3',
   );
 }

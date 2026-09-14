@@ -115,6 +115,12 @@ class MealPlanProvider extends ChangeNotifier {
   Future<void> _initMealPlan() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      if (_activeUid == null || _activeUid == 'guest') {
+        final savedUid = prefs.getString('saved_uid');
+        if (savedUid != null && savedUid.isNotEmpty) {
+          _activeUid = savedUid;
+        }
+      }
       final saved = prefs.getString(_getStorageKey());
       if (saved != null && saved.isNotEmpty) {
         final List<dynamic> decoded = jsonDecode(saved);

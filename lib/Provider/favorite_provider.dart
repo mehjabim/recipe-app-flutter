@@ -8,7 +8,7 @@ class FavoriteProvider extends ChangeNotifier {
   List<String> _favoriteIds = [];
   String? _activeUid;
 
-  List<String> get favorites => _favoriteIds;
+  List<String> get favorites => List.unmodifiable(_favoriteIds);
 
   String get currentUid {
     if (_activeUid != null && _activeUid!.isNotEmpty) {
@@ -35,7 +35,7 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   void checkUserChanged(String? newUid) {
-    final target = newUid ?? 'guest';
+    final target = (newUid != null && newUid.isNotEmpty) ? newUid : 'guest';
     if (_activeUid != target) {
       _activeUid = target;
       _initFavorites();
@@ -52,8 +52,20 @@ class FavoriteProvider extends ChangeNotifier {
   Future<void> _loadFromPrefs() async {
     try {
       final prefs = await SharedPreferences.getInstance();
+      if (_activeUid == null || _activeUid == 'guest') {
+        final savedUid = prefs.getString('saved_uid');
+        if (savedUid != null && savedUid.isNotEmpty) {
+          _activeUid = savedUid;
+        }
+      }
       final saved = prefs.getStringList(_getStorageKey());
-      _favoriteIds = saved ?? [];
+      final loaded = saved != null ? List<String>.from(saved) : <String>[];
+      for (final id in _favoriteIds) {
+        if (!loaded.contains(id)) {
+          loaded.add(id);
+        }
+      }
+      _favoriteIds = loaded;
       notifyListeners();
     } catch (e) {
       debugPrint("Error loading favorites from prefs: $e");

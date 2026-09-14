@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import '../Provider/favorite_provider.dart';
+import '../Provider/meal_plan_provider.dart';
 import '../Provider/quantity.dart';
 import '../Utils/constants.dart';
 import '../Widget/my_icon_button.dart';
 import '../Widget/quantity_increment_decrement.dart';
 import '../models/recipe_model.dart';
+import '../services/mock_data_service.dart';
+import 'meal_plan_screen.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final DocumentSnapshot<Object?>? documentSnapshot;
@@ -48,14 +51,329 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     });
   }
 
+  void _showScheduleModal({
+    required BuildContext context,
+    required String recipeName,
+    required String calories,
+    required String imageUrl,
+  }) {
+    String selectedDay = "Mon";
+    String selectedMealType = "Breakfast";
+    String scheduledTime = "08:00 AM";
+
+    final List<String> days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    final List<String> dayNames = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ];
+    final List<String> mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack"];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => StatefulBuilder(
+        builder: (sheetContext, setModalState) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+            ),
+            padding: EdgeInsets.only(
+              left: 22.0,
+              right: 22.0,
+              top: 20.0,
+              bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 24.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top Handle
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: kBorderColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Modal Title
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: kprimaryColor.withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Iconsax.calendar_add, color: kprimaryColor, size: 22),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Schedule to Meal Plan',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: kTextPrimaryColor,
+                            ),
+                          ),
+                          Text(
+                            recipeName,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: kTextSecondaryColor,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 22),
+
+                // Day Selection
+                const Text(
+                  'Select Day of the Week',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: kTextPrimaryColor,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(days.length, (index) {
+                      final dayCode = days[index];
+                      final isSelected = selectedDay == dayCode;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ChoiceChip(
+                          label: Text(days[index]),
+                          selected: isSelected,
+                          selectedColor: kprimaryColor,
+                          backgroundColor: kbackgroundColor,
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : kTextPrimaryColor,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                          onSelected: (selected) {
+                            if (selected) {
+                              setModalState(() {
+                                selectedDay = dayCode;
+                              });
+                            }
+                          },
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Meal Type Selection
+                const Text(
+                  'Select Meal Type',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: kTextPrimaryColor,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  children: mealTypes.map((type) {
+                    final isSelected = selectedMealType == type;
+                    return ChoiceChip(
+                      label: Text(type),
+                      selected: isSelected,
+                      selectedColor: kBannerColor,
+                      backgroundColor: kbackgroundColor,
+                      labelStyle: TextStyle(
+                        color: isSelected ? Colors.white : kTextPrimaryColor,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                      onSelected: (selected) {
+                        if (selected) {
+                          setModalState(() {
+                            selectedMealType = type;
+                            if (type == "Breakfast") scheduledTime = "08:00 AM";
+                            if (type == "Lunch") scheduledTime = "01:00 PM";
+                            if (type == "Dinner") scheduledTime = "07:30 PM";
+                            if (type == "Snack") scheduledTime = "04:30 PM";
+                          });
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 24),
+
+                // Scheduled Time Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Scheduled Time',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: kTextPrimaryColor,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: sheetContext,
+                          initialTime: const TimeOfDay(hour: 8, minute: 0),
+                        );
+                        if (picked != null) {
+                          setModalState(() {
+                            final hour = picked.hourOfPeriod == 0 ? 12 : picked.hourOfPeriod;
+                            final minute = picked.minute.toString().padLeft(2, '0');
+                            final period = picked.period == DayPeriod.am ? 'AM' : 'PM';
+                            scheduledTime = '${hour.toString().padLeft(2, '0')}:$minute $period';
+                          });
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: kbackgroundColor,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: kBorderColor),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Iconsax.clock, size: 16, color: kprimaryColor),
+                            const SizedBox(width: 6),
+                            Text(
+                              scheduledTime,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: kprimaryColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28),
+
+                // Confirm Button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final mealPlanProvider =
+                          Provider.of<MealPlanProvider>(context, listen: false);
+
+                      mealPlanProvider.addMeal(
+                        PlannedMeal(
+                          id: 'meal_${DateTime.now().millisecondsSinceEpoch}',
+                          day: selectedDay,
+                          mealType: selectedMealType,
+                          recipeName: recipeName,
+                          time: scheduledTime,
+                          calories: calories,
+                          imageUrl: imageUrl,
+                        ),
+                      );
+
+                      Navigator.pop(ctx);
+
+                      final fullDayName =
+                          dayNames[days.indexOf(selectedDay)];
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Added to $fullDayName ($selectedMealType)!',
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          backgroundColor: kprimaryColor,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          action: SnackBarAction(
+                            label: 'VIEW PLAN',
+                            textColor: Colors.white,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const MealPlanScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kprimaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                    ),
+                    child: const Text(
+                      'Confirm & Schedule',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final favProvider = Provider.of<FavoriteProvider>(context);
     final quantityProvider = Provider.of<QuantityProvider>(context);
     final data = (widget.documentSnapshot?.data() as Map<String, dynamic>?) ?? {};
 
-    final String itemId = widget.recipe?.id ?? widget.documentSnapshot?.id ?? "recipe";
     final String name = widget.recipe?.name ?? (data['name']?.toString() ?? "Mindful Recipe");
+    String itemId = widget.recipe?.id ?? (data['id']?.toString() ?? widget.documentSnapshot?.id ?? "recipe");
+    if (widget.recipe == null && name.isNotEmpty) {
+      for (final r in MockDataService.getAllRecipes()) {
+        if (r.name.trim().toLowerCase() == name.trim().toLowerCase()) {
+          itemId = r.id;
+          break;
+        }
+      }
+    }
     final String image = widget.recipe?.image ?? (data['image']?.toString() ?? "");
     final String cal = widget.recipe?.cal ?? (data['cal']?.toString() ?? "250");
     final String time = widget.recipe?.time ?? (data['time']?.toString() ?? "20");
@@ -362,13 +680,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     height: 54,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('$name scheduled to your meal plan!'),
-                            backgroundColor: kprimaryColor,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
+                        _showScheduleModal(
+                          context: context,
+                          recipeName: name,
+                          calories: '$cal Cal',
+                          imageUrl: image,
                         );
                       },
                       icon: const Icon(Iconsax.calendar_add, color: Colors.white, size: 20),

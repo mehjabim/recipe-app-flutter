@@ -6,6 +6,7 @@ import '../Provider/favorite_provider.dart';
 import '../Utils/constants.dart';
 import '../Views/recipe_detail_screen.dart';
 import '../models/recipe_model.dart';
+import '../services/mock_data_service.dart';
 
 class FoodItemsDisplay extends StatelessWidget {
   final DocumentSnapshot<Object?>? documentSnapshot;
@@ -24,8 +25,17 @@ class FoodItemsDisplay extends StatelessWidget {
     final favProvider = Provider.of<FavoriteProvider>(context);
     final data = (documentSnapshot?.data() as Map<String, dynamic>?) ?? {};
 
-    final String itemId = recipe?.id ?? documentSnapshot?.id ?? "recipe";
     final String name = recipe?.name ?? (data['name']?.toString() ?? "Wholesome Dish");
+    String itemId = recipe?.id ?? (data['id']?.toString() ?? documentSnapshot?.id ?? "recipe");
+    if (recipe == null && name.isNotEmpty) {
+      for (final r in MockDataService.getAllRecipes()) {
+        if (r.name.trim().toLowerCase() == name.trim().toLowerCase()) {
+          itemId = r.id;
+          break;
+        }
+      }
+    }
+
     final String image = recipe?.image ?? (data['image']?.toString() ?? "");
     final String cal = recipe?.cal ?? (data['cal']?.toString() ?? "250");
     final String time = recipe?.time ?? (data['time']?.toString() ?? "20");
